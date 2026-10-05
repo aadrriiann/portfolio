@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Adrián Vázquez — Portfolio DAM</title>
+    <meta name="description" content="Portfolio de Adrián Vázquez, estudiante de DAM (Desarrollo de Aplicaciones Multiplataforma) en Salesianos." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css?v=8" />
+  </head>
+  <body>
+    <canvas id="cursor-trail" aria-hidden="true"></canvas>
+
+    <header class="hero" id="inicio">
+      <p class="kicker">DAM · Salesianos</p>
+      <h1>Adrián Vázquez</h1>
+      <p class="hero-text">
+        Soy estudiante de Desarrollo de Aplicaciones Multiplataforma (DAM) y desarrollador en formación,
+        con especial interés en el desarrollo de aplicaciones, videojuegos y nuevas tecnologías.
+
+        Me gusta aprender mediante la práctica y convertir ideas en proyectos funcionales y atractivos.
+        Actualmente trabajo con tecnologías como Java, Flutter, .NET, HTML, CSS y Bootstrap, y tengo
+        experiencia utilizando herramientas como Git, GitHub y Visual Studio Code.
+        Mi objetivo es seguir creciendo como desarrollador, ampliar mis conocimientos y participar en
+        proyectos en los que pueda aportar creatividad, aprender continuamente y desarrollar soluciones
+        tecnológicas de calidad.
+      </p>
+      <a class="hero-cue" href="#projects">Proyectos ↓</a>
+    </header>
+
+    <section id="projects" aria-label="Proyectos">
+      <div id="helix-stage">
+        <canvas id="helix"></canvas>
+        <aside class="hud" id="hud">
+          <p class="hud-index" id="hud-index">01 / 02</p>
+          <h2 id="hud-title">Proyecto</h2>
+          <p class="hud-meta" id="hud-meta"></p>
+          <p class="hud-summary" id="hud-summary"></p>
+        </aside>
+        <p class="hint">Sigue bajando para subir la escalera · clic en una carta · Esc para cerrar</p>
+        <section class="detail" id="detail" role="dialog" aria-labelledby="detail-title" hidden>
+          <button class="detail-close" id="detail-close" type="button" aria-label="Cerrar">×</button>
+          <p class="detail-meta" id="detail-meta"></p>
+          <h3 id="detail-title"></h3>
+          <p class="detail-text" id="detail-text"></p>
+          <ul class="detail-stack" id="detail-stack"></ul>
+          <div class="detail-links" id="detail-links"></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="contact" id="contacto">
+      <p class="kicker">Contacto</p>
+      <h2>¿Hablamos?</h2>
+      <p class="contact-text">Estoy abierto a prácticas, colaboraciones, cuentame de que va tu proyecto y me dices en que te puedo ayduar.</p>
+      <div class="contact-links">
+        <a href="contact.html">Envíame un correo</a>
+      </div>
+    </section>
+
+    <div id="toast" class="toast" role="status" aria-live="polite">Correo enviado correctamente.</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.min.js"></script>
+    <script src="js/projects.js?v=8"></script>
+    <script src="js/helix.js?v=8"></script>
+    <script src="js/main.js?v=8"></script>
+  </body>
+</html>

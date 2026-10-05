@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Envíame un correo — Adrián Vázquez</title>
+    <meta
+      name="description"
+      content="Formulario de contacto para Adrián Vázquez. Envía un correo con tu asunto, descripción y adjunto directamente por email."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css?v=8" />
+  </head>
+  <body class="contact-page">
+    <a class="back-link" href="index.html">← Volver</a>
+
+    <main class="contact-shell">
+      <section class="contact-card" aria-labelledby="contact-form-title">
+        <p class="kicker">Contacto</p>
+        <h1 id="contact-form-title">Envíame un correo</h1>
+        <p class="contact-form-intro">
+          Cuéntame tu proyecto, propuesta o consulta. Puedes incluir tu correo, el asunto, una descripción
+          detallada y un archivo adjunto si lo necesitas.
+        </p>
+
+        <form
+          class="contact-form"
+          action="https://formsubmit.co/vazquezbonetadrian09@gmail.com"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <input type="hidden" name="_subject" value="Nuevo mensaje desde el portfolio" />
+          <input type="hidden" name="_captcha" value="false" />
+          <input type="hidden" name="_template" value="table" />
+          <input type="hidden" name="_next" value="http://localhost:8000/index.html?success=1" />
+
+          <label>
+            <span>Tu correo</span>
+            <input type="email" name="email" placeholder="tu@correo.com" required />
+          </label>
+
+          <label>
+            <span>Asunto</span>
+            <input type="text" name="subject" placeholder="Proyecto, colaboración, duda..." required />
+          </label>
+
+          <label>
+            <span>Descripción</span>
+            <textarea
+              name="message"
+              rows="6"
+              placeholder="Explica brevemente qué necesitas o qué te gustaría proponer..."
+              required
+            ></textarea>
+          </label>
+
+          <label>
+            <span>Archivo adjunto (opcional)</span>
+            <input type="file" name="attachment" />
+          </label>
+
+          <button type="submit">Enviar mensaje</button>
+        </form>
+      </section>
+    </main>
+  </body>
+</html>
