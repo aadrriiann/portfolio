@@ -3,7 +3,7 @@
 ## 1. Product
 - Personal portfolio of Adrián Vázquez (DAM student, Salesianos). Static site, UI copy in Spanish.
 - Two pages: `index.html` (hero, 3D project "staircase", contact call-to-action) and `contact.html` (contact form).
-- Projects are cards on a 3D spiral staircase (three.js). Scrolling climbs the stairs; click a card (or Enter) opens a detail panel; Esc closes it.
+- Projects are cards on a 3D spiral staircase (three.js). Scrolling down descends the stairs (card 01 at the top); click a card (or Enter) opens a detail panel; Esc closes it.
 - Users: recruiters and people who want to contact him (inferred from the copy: "abierto a prácticas, colaboraciones").
 
 ## 2. Data and backend
@@ -36,7 +36,7 @@
 ## 6. Code conventions
 - Reference file: `js/main.js` (small IIFE, `const` + arrow functions, 2-space indent, double quotes, semicolons).
 - CSS: class-based, `:root` custom properties, one section per area with a `/* ---------- ... ---------- */` banner, breakpoint at `max-width: 720px`.
-- Cache busting: `css/style.css?v=9`, `js/*.js?v=9` in `index.html` (`contact.html` only loads the CSS). Bump the number in every page that references the file after changing it.
+- Cache busting: `?v=N` per file in `index.html` (e.g. `helix.js?v=10`) (`contact.html` only loads the CSS). Bump the number in every page that references the file after changing it.
 - To add a project: copy a block in `js/projects.js` and fill `title, course, tag, summary, description, stack, links, image, hue`,
   plus `status: "wip"` (in development: shows a toast, never opens) or `web` (published URL; only finished projects with `web` open the panel). `links` holds extra links only.
   `image` is a 768x512 picture; prefer a file in `assets/` (as RankGym does). Without `image` the card uses a gradient from `hue`.

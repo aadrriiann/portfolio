@@ -18,7 +18,8 @@
   // Geometría de la escalera: cada escalón gira STEP_A rad y sube RISE; las cartas van cada GAP escalones.
   const STEP_A = 0.45, RISE = 0.17, GAP = 8, LEAD = 6, R_CARD = 3.15;
   const STEPS = LEAD * 2 + (n - 1) * GAP + 1;
-  const cardStep = (i) => LEAD + i * GAP;
+  // Card 0 sits on the highest card step and the last card on the lowest, so scrolling down descends.
+  const cardStep = (i) => LEAD + (n - 1 - i) * GAP;
   const isWip = (p) => p.status === "wip";
   const metaText = (p) => `${p.course} · ${p.tag}`;
 
@@ -171,7 +172,7 @@
   }
 
   function pose(p) {
-    // Girar y subir la escalera para que la carta activa quede delante, en el centro.
+    // Rotate and lower the camera down the stairs so the active card stays in front, centred.
     const a0 = cardStep(0) * STEP_A - Math.PI / 2;
     const a1 = cardStep(n - 1) * STEP_A - Math.PI / 2;
     spiral.rotation.y = a0 + (a1 - a0) * p;

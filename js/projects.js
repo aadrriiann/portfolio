@@ -14,6 +14,7 @@ window.PROJECTS = [
     stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "Supabase", "Chart.js"],
     web: "https://beavr-crm.vercel.app/",
     links: [],
+    image: "assets/beavr-crm.png",
     hue: 200,
   },
   {
