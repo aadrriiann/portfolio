@@ -19,6 +19,8 @@
   const STEP_A = 0.45, RISE = 0.17, GAP = 8, LEAD = 6, R_CARD = 3.15;
   const STEPS = LEAD * 2 + (n - 1) * GAP + 1;
   const cardStep = (i) => LEAD + i * GAP;
+  const isWip = (p) => p.status === "wip";
+  const metaText = (p) => `${p.course} · ${p.tag}`;
 
   section.style.setProperty("--n", n);
 
@@ -108,6 +110,7 @@
       g.fillStyle = "rgba(255,255,255,0.7)";
       g.font = "500 22px Inter, sans-serif";
       g.fillText(String(index + 1).padStart(2, "0"), 48, 64);
+      if (isWip(project)) drawWipLabel(g);
       g.fillStyle = "#fff";
       g.font = "800 54px Syne, Inter, sans-serif";
       wrapText(g, project.title, 48, img ? 410 : 250, 670, 62);
@@ -128,6 +131,23 @@
       im.src = project.image;
     }
     return tex;
+  }
+
+  // Outlined pill in the top-right corner, baseline-aligned with the index number.
+  function drawWipLabel(g) {
+    const label = "EN DESARROLLO";
+    g.font = "500 18px Inter, sans-serif";
+    const w = g.measureText(label).width + 36;
+    const h = 36;
+    const x = 768 - 48 - w;
+    const y = 64 - 25;
+    g.strokeStyle = "#fff";
+    g.lineWidth = 1.5;
+    g.beginPath();
+    g.roundRect(x, y, w, h, h / 2);
+    g.stroke();
+    g.fillStyle = "#fff";
+    g.fillText(label, x + 18, 64 - 2);
   }
 
   function wrapText(g, text, x, y, maxW, lineH) {
@@ -185,7 +205,7 @@
     const p = PROJECTS[i];
     hudIndex.textContent = `${String(i + 1).padStart(2, "0")} / ${String(n).padStart(2, "0")}`;
     hudTitle.textContent = p.title;
-    hudMeta.textContent = `${p.course} · ${p.tag}`;
+    hudMeta.textContent = isWip(p) ? `${metaText(p)} · En desarrollo` : metaText(p);
     hudSummary.textContent = p.summary;
   }
 
@@ -198,10 +218,28 @@
   }
 
   const isOpen = () => !detail.hidden;
+  const canOpen = (i) => i >= 0 && !isWip(PROJECTS[i]) && Boolean(PROJECTS[i].web);
+
+  function linkEl(label, url) {
+    const a = document.createElement("a");
+    a.href = url;
+    a.textContent = label;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    return a;
+  }
+
+  // Single entry point for card click and Enter: open the panel or explain why not.
+  function activate(i) {
+    const p = PROJECTS[i];
+    if (isWip(p)) window.showToast("Proyecto en desarrollo. Todavía no se puede abrir.");
+    else if (!p.web) window.showToast("Este proyecto todavía no tiene web publicada.");
+    else openDetail(i);
+  }
 
   function openDetail(i) {
     const p = PROJECTS[i];
-    dMeta.textContent = `${p.course} · ${p.tag}`;
+    dMeta.textContent = metaText(p);
     dTitle.textContent = p.title;
     dText.textContent = p.description || p.summary;
     dStack.replaceChildren(
@@ -211,16 +249,7 @@
         return li;
       })
     );
-    dLinks.replaceChildren(
-      ...(p.links || []).map((l) => {
-        const a = document.createElement("a");
-        a.href = l.url;
-        a.textContent = l.label;
-        a.target = "_blank";
-        a.rel = "noopener noreferrer";
-        return a;
-      })
-    );
+    dLinks.replaceChildren(linkEl("Ver web", p.web), ...(p.links || []).map((l) => linkEl(l.label, l.url)));
     detail.hidden = false;
     stage.classList.add("detail-open");
   }
@@ -301,16 +330,16 @@
     });
 
     window.addEventListener("resize", onResize);
-    canvas.addEventListener("pointermove", (e) => canvas.classList.toggle("pointer", pick(e) >= 0));
+    canvas.addEventListener("pointermove", (e) => canvas.classList.toggle("pointer", canOpen(pick(e))));
     canvas.addEventListener("click", (e) => {
       const i = pick(e);
-      if (i >= 0) openDetail(i);
+      if (i >= 0) activate(i);
       else closeDetail();
     });
     document.getElementById("detail-close").addEventListener("click", closeDetail);
     window.addEventListener("keydown", (e) => {
       if (e.key === "Escape") closeDetail();
-      else if (e.key === "Enter" && !isOpen() && e.target === document.body) openDetail(currentIndex);
+      else if (e.key === "Enter" && !isOpen() && e.target === document.body) activate(currentIndex);
     });
     sp = scrollTarget();
     animate();
