@@ -9,7 +9,7 @@
 ## 2. Data and backend
 - No backend, no database, no build step. All project data lives in `js/projects.js` (`window.PROJECTS`).
 - Contact form posts to the FormSubmit service (`https://formsubmit.co/<address>`, address hard-coded in `contact.html`); nothing is stored here.
-- Do not touch: the `name`/hidden `_*` fields of the form (FormSubmit options), and the element ids used by `js/helix.js` and `js/main.js`
+- Do not touch: the `name`/hidden `_*` fields of the form (FormSubmit options), the `form-next` id (used by the inline script in `contact.html`), and the element ids used by `js/helix.js` and `js/main.js`
   (`helix`, `helix-stage`, `projects`, `hud-*`, `detail*`, `toast`, `cursor-trail`).
 
 ## 3. Stack (no package files; versions taken from the HTML)
@@ -20,7 +20,7 @@
 
 ## 4. Folder map
 - `index.html` - main page: hero, `#projects` stage with the canvas, contact section, toast.
-- `contact.html` - contact form page (does not load any JS).
+- `contact.html` - contact form page (no JS files; a small inline script sets `_next` to the current origin).
 - `css/style.css` - all styles for both pages.
 - `js/projects.js` - project cards data (title, course, tag, summary, description, stack, links, image, hue).
 - `js/helix.js` - three.js scene: stairs, cards, dither shader, scroll pose, HUD, detail panel.
@@ -29,7 +29,7 @@
 
 ## 5. Commands (run from `Portfolio/`)
 - Install: none.
-- Dev: `python -m http.server 8000`, then open `http://localhost:8000` (the form's `_next` expects port 8000).
+- Dev: `python -m http.server 8000`, then open `http://localhost:8000`.
 - Lint / typecheck / test: TODO (none configured).
 - Build: none; the folder is deployed as is.
 
@@ -58,7 +58,6 @@
 
 ## 10. Known problems
 - `js/projects.js` is saved with a BOM and double-encoded (UTF-8 read as Latin-1): accents show as `Ã±`, `Ã©` in the cards and detail panel. Re-save it as plain UTF-8 and fix the strings.
-- `contact.html` sets `_next` to `http://localhost:8000/index.html?success=1`; after deploying, the post-submit redirect will point to localhost. Use the real URL in production.
 - If the three.js CDN fails, `window.THREE` is undefined and `helix.js` throws; the projects section stays blank (no fallback).
 - `prefers-reduced-motion` only disables smooth scroll; the helix animation and the cursor trail still run.
 - `.topbar` and `.topbar h1` in `css/style.css` are unused (no such element in the HTML). Remove them.
