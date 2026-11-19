@@ -50,6 +50,7 @@
 - Headings use Syne 800 with negative letter-spacing; body uses Inter.
 - Buttons and links are pills (`border-radius: 999px`); panels use 14px and 24px radii; white fill on dark for primary actions.
 - No shared component library; reuse existing classes (`.kicker`, `.hero-text`, `.contact-links a`, `.detail-*`).
+- Project HUD sits on the left, vertically centred (bottom on mobile), where the detail panel opens; a soft gradient (`#helix-stage::before`) keeps it readable over the stairs.
 - No emoji. Keep new UI inside this palette.
 
 ## 8. Environment variables
