@@ -34,7 +34,7 @@
           <input type="hidden" name="_subject" value="Nuevo mensaje desde el portfolio" />
           <input type="hidden" name="_captcha" value="false" />
           <input type="hidden" name="_template" value="table" />
-          <input type="hidden" name="_next" value="http://localhost:8000/index.html?success=1" />
+          <input type="hidden" name="_next" id="form-next" value="https://portfolio-psi-brown-11.vercel.app/index.html?success=1" />
 
           <label>
             <span>Tu correo</span>
@@ -65,5 +65,12 @@
         </form>
       </section>
     </main>
+
+    <script>
+      (() => {
+        // Make the post-submit redirect follow the origin this page is served from.
+        document.getElementById("form-next").value = new URL("index.html?success=1", window.location.href).href;
+      })();
+    </script>
   </body>
 </html>
