@@ -54,27 +54,12 @@ canvas {
   inset: 0;
 }
 
-.topbar {
-  position: absolute;
-  top: 28px;
-  left: 32px;
-  z-index: 12;
-  pointer-events: none;
-}
-
 .kicker {
   font-size: 11px;
   letter-spacing: 0.28em;
   text-transform: uppercase;
   color: var(--muted);
   margin-bottom: 8px;
-}
-
-.topbar h1 {
-  font-family: Syne, Inter, sans-serif;
-  font-weight: 800;
-  font-size: clamp(22px, 3vw, 34px);
-  letter-spacing: -0.04em;
 }
 
 .hud {
@@ -132,7 +117,6 @@ canvas {
     bottom: 64px;
   }
 
-  .topbar,
   .hint {
     left: 18px;
   }
@@ -188,7 +172,8 @@ canvas {
   margin-bottom: 10px;
 }
 
-.detail h3 {
+.detail h3,
+.projects-list h3 {
   font-family: Syne, Inter, sans-serif;
   font-size: 26px;
   letter-spacing: -0.03em;
@@ -251,6 +236,30 @@ canvas {
     width: auto;
     transform: none;
     animation: none;
+  }
+}
+
+/* ---------- Projects fallback ---------- */
+#projects.projects-fallback {
+  height: auto;
+  padding: 96px max(32px, 8vw);
+}
+
+.projects-list {
+  list-style: none;
+  display: grid;
+  gap: 40px;
+  max-width: 720px;
+  margin-top: 24px;
+}
+
+@media (max-width: 720px) {
+  #projects.projects-fallback {
+    padding: 64px 18px;
+  }
+
+  .projects-list {
+    gap: 32px;
   }
 }
 

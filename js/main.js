@@ -15,6 +15,9 @@
 
   if (params.get("success") === "1") window.showToast("Correo enviado correctamente.");
 
+  // The cursor trail is decorative motion: skip it entirely when reduced motion is preferred.
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
   const trail = document.getElementById("cursor-trail");
   const tctx = trail.getContext("2d");
   const dots = [];
