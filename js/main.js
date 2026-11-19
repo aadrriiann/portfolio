@@ -2,12 +2,18 @@
   const params = new URLSearchParams(window.location.search);
   const toast = document.getElementById("toast");
 
-  if (params.get("success") === "1" && toast) {
+  let toastTimer = 0;
+
+  window.showToast = (message) => {
+    toast.textContent = message;
     toast.classList.add("show");
-    window.setTimeout(() => {
+    window.clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(() => {
       toast.classList.remove("show");
     }, 3500);
-  }
+  };
+
+  if (params.get("success") === "1") window.showToast("Correo enviado correctamente.");
 
   const trail = document.getElementById("cursor-trail");
   const tctx = trail.getContext("2d");

@@ -36,8 +36,9 @@
 ## 6. Code conventions
 - Reference file: `js/main.js` (small IIFE, `const` + arrow functions, 2-space indent, double quotes, semicolons).
 - CSS: class-based, `:root` custom properties, one section per area with a `/* ---------- ... ---------- */` banner, breakpoint at `max-width: 720px`.
-- Cache busting: `css/style.css?v=8`, `js/*.js?v=8` in both HTML files. Bump the number in every page that references the file after changing it.
-- To add a project: copy a block in `js/projects.js` and fill `title, course, tag, summary, description, stack, links, image, hue`.
+- Cache busting: `css/style.css?v=9`, `js/*.js?v=9` in `index.html` (`contact.html` only loads the CSS). Bump the number in every page that references the file after changing it.
+- To add a project: copy a block in `js/projects.js` and fill `title, course, tag, summary, description, stack, links, image, hue`,
+  plus `status: "wip"` (in development: shows a toast, never opens) or `web` (published URL; only finished projects with `web` open the panel). `links` holds extra links only.
   `image` is a 768x512 picture; prefer a file in `assets/` (as RankGym does). Without `image` the card uses a gradient from `hue`.
 - Existing comments and UI text are in Spanish; new code and comments in English (global rule). UI text stays Spanish.
 
