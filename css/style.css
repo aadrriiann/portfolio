@@ -62,40 +62,54 @@ canvas {
   margin-bottom: 8px;
 }
 
-.hud {
+/* ---------- HUD ---------- */
+/* Soft left backdrop so the HUD stays readable when the stairs pass behind it */
+#helix-stage::before {
+  content: "";
   position: absolute;
-  right: 32px;
-  bottom: 36px;
-  z-index: 12;
-  max-width: 280px;
+  inset: 0;
+  z-index: 11;
+  background: linear-gradient(90deg, rgba(5, 5, 5, 0.85) 0%, rgba(5, 5, 5, 0.55) 28%, rgba(5, 5, 5, 0) 50%);
   pointer-events: none;
 }
 
+.hud {
+  position: absolute;
+  left: max(32px, 6vw);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 12;
+  max-width: min(360px, 24vw);
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
 .hud-index {
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.22em;
   color: var(--muted);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .hud h2 {
   font-family: Syne, Inter, sans-serif;
-  font-size: 28px;
+  font-size: clamp(36px, 4vw, 56px);
+  font-weight: 800;
   letter-spacing: -0.03em;
-  line-height: 1.1;
-  margin-bottom: 8px;
+  line-height: 1.05;
+  margin-bottom: 14px;
 }
 
 .hud-meta {
-  font-size: 12px;
+  font-size: 14px;
   color: var(--muted);
-  margin-bottom: 10px;
+  margin-bottom: 16px;
 }
 
 .hud-summary {
-  font-size: 13px;
-  line-height: 1.5;
-  color: rgba(244, 244, 244, 0.78);
+  font-size: 17px;
+  line-height: 1.55;
+  color: rgba(244, 244, 244, 0.85);
 }
 
 .hint {
@@ -107,21 +121,38 @@ canvas {
   letter-spacing: 0.08em;
   color: var(--muted);
   pointer-events: none;
+  transition: opacity 0.25s ease;
 }
 
 @media (max-width: 720px) {
+  #helix-stage::before {
+    background: linear-gradient(0deg, rgba(5, 5, 5, 0.9) 0%, rgba(5, 5, 5, 0) 45%);
+  }
+
   .hud {
+    left: 18px;
     right: 18px;
-    left: 18px;
-    max-width: none;
+    top: auto;
     bottom: 64px;
+    transform: none;
+    max-width: none;
+  }
+
+  .hud h2 {
+    font-size: 30px;
+    margin-bottom: 10px;
+  }
+
+  .hud-meta {
+    margin-bottom: 12px;
+  }
+
+  .hud-summary {
+    font-size: 15px;
   }
 
   .hint {
     left: 18px;
-  }
-
-  .hint {
     bottom: 18px;
   }
 }
@@ -131,7 +162,7 @@ canvas {
 
 .detail {
   position: absolute;
-  left: 32px;
+  left: max(32px, 6vw);
   top: 50%;
   transform: translateY(-50%);
   z-index: 14;

@@ -86,6 +86,8 @@
   let sp = 0; // progreso de scroll suavizado (0..1)
   let currentIndex = 0;
   const raycaster = new THREE.Raycaster();
+  const VIEW_SHIFT = 0.16; // fraction of the viewport width the 3D view moves right on desktop
+  let ndcShift = 0; // horizontal NDC position of the screen focus after the shift
   const _ptr = new THREE.Vector2();
   const _world = new THREE.Vector3();
   const _ndc = new THREE.Vector3();
@@ -247,7 +249,7 @@
     meshes.forEach((m, i) => {
       m.getWorldPosition(_world);
       _ndc.copy(_world).project(camera);
-      const score = Math.abs(_ndc.x) * 0.85 + Math.abs(_ndc.y) * 0.35 - _ndc.z * 2;
+      const score = Math.abs(_ndc.x - ndcShift) * 0.85 + Math.abs(_ndc.y) * 0.35 - _ndc.z * 2;
       if (score < bestScore) {
         bestScore = score;
         best = i;
@@ -319,9 +321,21 @@
     updateHud();
   }
 
+  // On desktop, shift the rendered view right so the active card leaves the left side free for the HUD.
+  function applyViewOffset() {
+    if (innerWidth > 720) {
+      camera.setViewOffset(innerWidth, innerHeight, -innerWidth * VIEW_SHIFT, 0, innerWidth, innerHeight);
+      ndcShift = VIEW_SHIFT * 2;
+    } else {
+      camera.clearViewOffset();
+      ndcShift = 0;
+    }
+    camera.updateProjectionMatrix();
+  }
+
   function onResize() {
     camera.aspect = innerWidth / innerHeight;
-    camera.updateProjectionMatrix();
+    applyViewOffset();
     renderer.setSize(innerWidth, innerHeight);
   }
 
@@ -331,6 +345,7 @@
     camera = new THREE.PerspectiveCamera(38, innerWidth / innerHeight, 0.1, 80);
     camera.position.set(1.6, 0.15, 9.4);
     camera.lookAt(0, 0, 0);
+    applyViewOffset();
 
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
