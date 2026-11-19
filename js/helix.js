@@ -15,18 +15,74 @@
 
   const PROJECTS = window.PROJECTS;
   const n = PROJECTS.length;
+  const isWip = (p) => p.status === "wip";
+  const metaText = (p) => `${p.course} · ${p.tag}`;
+  const statusMeta = (p) => (isWip(p) ? `${metaText(p)} · En desarrollo` : metaText(p));
+  // A finished project opens the detail panel when it has something to link to.
+  const hasLinks = (p) => Boolean(p.web) || (p.links || []).length > 0;
+
+  function linkEl(label, url) {
+    const a = document.createElement("a");
+    a.href = url;
+    a.textContent = label;
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    return a;
+  }
+
+  const projectLinks = (p) => [
+    ...(p.web ? [linkEl("Ver web", p.web)] : []),
+    ...(p.links || []).map((l) => linkEl(l.label, l.url)),
+  ];
+
+  function textEl(tag, className, text) {
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    el.textContent = text;
+    return el;
+  }
+
+  // three.js CDN failed: show the projects as a plain list instead of the 3D staircase.
+  function renderFallback() {
+    stage.hidden = true;
+    section.classList.add("projects-fallback");
+    const list = document.createElement("ol");
+    list.className = "projects-list";
+    PROJECTS.forEach((p) => {
+      const item = document.createElement("li");
+      item.append(
+        textEl("h3", "", p.title),
+        textEl("p", "detail-meta", statusMeta(p)),
+        textEl("p", "detail-text", p.summary)
+      );
+      if (!isWip(p)) {
+        const links = document.createElement("div");
+        links.className = "detail-links";
+        links.append(...projectLinks(p));
+        item.append(links);
+      }
+      list.append(item);
+    });
+    section.append(textEl("p", "kicker", "Proyectos"), list);
+  }
+
+  if (!window.THREE) {
+    renderFallback();
+    return;
+  }
+
   // Geometría de la escalera: cada escalón gira STEP_A rad y sube RISE; las cartas van cada GAP escalones.
   const STEP_A = 0.45, RISE = 0.17, GAP = 8, LEAD = 6, R_CARD = 3.15;
   const STEPS = LEAD * 2 + (n - 1) * GAP + 1;
   // Card 0 sits on the highest card step and the last card on the lowest, so scrolling down descends.
   const cardStep = (i) => LEAD + (n - 1 - i) * GAP;
-  const isWip = (p) => p.status === "wip";
-  const metaText = (p) => `${p.course} · ${p.tag}`;
+  // Reduced motion keeps the scroll-driven pose but drops the autonomous animation.
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   section.style.setProperty("--n", n);
 
   let renderer, scene, camera, spiral, meshes;
-  let entry = 0;
+  let entry = reducedMotion ? 1 : 0;
   let sp = 0; // progreso de scroll suavizado (0..1)
   let currentIndex = 0;
   const raycaster = new THREE.Raycaster();
@@ -206,7 +262,7 @@
     const p = PROJECTS[i];
     hudIndex.textContent = `${String(i + 1).padStart(2, "0")} / ${String(n).padStart(2, "0")}`;
     hudTitle.textContent = p.title;
-    hudMeta.textContent = isWip(p) ? `${metaText(p)} · En desarrollo` : metaText(p);
+    hudMeta.textContent = statusMeta(p);
     hudSummary.textContent = p.summary;
   }
 
@@ -219,22 +275,13 @@
   }
 
   const isOpen = () => !detail.hidden;
-  const canOpen = (i) => i >= 0 && !isWip(PROJECTS[i]) && Boolean(PROJECTS[i].web);
-
-  function linkEl(label, url) {
-    const a = document.createElement("a");
-    a.href = url;
-    a.textContent = label;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-    return a;
-  }
+  const canOpen = (i) => i >= 0 && !isWip(PROJECTS[i]) && hasLinks(PROJECTS[i]);
 
   // Single entry point for card click and Enter: open the panel or explain why not.
   function activate(i) {
     const p = PROJECTS[i];
     if (isWip(p)) window.showToast("Proyecto en desarrollo. Todavía no se puede abrir.");
-    else if (!p.web) window.showToast("Este proyecto todavía no tiene web publicada.");
+    else if (!hasLinks(p)) window.showToast("Este proyecto todavía no tiene web publicada.");
     else openDetail(i);
   }
 
@@ -250,7 +297,7 @@
         return li;
       })
     );
-    dLinks.replaceChildren(linkEl("Ver web", p.web), ...(p.links || []).map((l) => linkEl(l.label, l.url)));
+    dLinks.replaceChildren(...projectLinks(p));
     detail.hidden = false;
     stage.classList.add("detail-open");
   }
@@ -264,9 +311,9 @@
     requestAnimationFrame(animate);
     const r = section.getBoundingClientRect();
     if (r.bottom < 0 || r.top > innerHeight) return; // fuera de pantalla: no dibujar
-    clock.t += 0.016;
+    if (!reducedMotion) clock.t += 0.016;
     if (r.top < innerHeight * 0.85) entry = Math.min(1, entry + 0.012);
-    sp += (scrollTarget() - sp) * 0.1;
+    sp = reducedMotion ? scrollTarget() : sp + (scrollTarget() - sp) * 0.1;
     pose(sp);
     renderer.render(scene, camera);
     updateHud();
