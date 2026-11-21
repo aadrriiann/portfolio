@@ -6,34 +6,13 @@
   const hudMeta = document.getElementById("hud-meta");
   const hudSummary = document.getElementById("hud-summary");
   const hudIndex = document.getElementById("hud-index");
-  const detail = document.getElementById("detail");
-  const dMeta = document.getElementById("detail-meta");
-  const dTitle = document.getElementById("detail-title");
-  const dText = document.getElementById("detail-text");
-  const dStack = document.getElementById("detail-stack");
-  const dLinks = document.getElementById("detail-links");
 
   const PROJECTS = window.PROJECTS;
   const n = PROJECTS.length;
-  const isWip = (p) => p.status === "wip";
-  const metaText = (p) => `${p.course} · ${p.tag}`;
-  const statusMeta = (p) => (isWip(p) ? `${metaText(p)} · En desarrollo` : metaText(p));
-  // A finished project opens the detail panel when it has something to link to.
-  const hasLinks = (p) => Boolean(p.web) || (p.links || []).length > 0;
-
-  function linkEl(label, url) {
-    const a = document.createElement("a");
-    a.href = url;
-    a.textContent = label;
-    a.target = "_blank";
-    a.rel = "noopener noreferrer";
-    return a;
-  }
-
-  const projectLinks = (p) => [
-    ...(p.web ? [linkEl("Ver web", p.web)] : []),
-    ...(p.links || []).map((l) => linkEl(l.label, l.url)),
-  ];
+  const { isWip, statusMeta, pageUrl } = window.projectHelpers;
+  // index.html#p=<slug> (link back from a project page) starts the staircase at that card.
+  const returnSlug = new URLSearchParams(window.location.hash.slice(1)).get("p");
+  const returnIndex = PROJECTS.findIndex((p) => p.slug === returnSlug);
 
   function textEl(tag, className, text) {
     const el = document.createElement(tag);
@@ -48,22 +27,22 @@
     section.classList.add("projects-fallback");
     const list = document.createElement("ol");
     list.className = "projects-list";
-    PROJECTS.forEach((p) => {
-      const item = document.createElement("li");
-      item.append(
-        textEl("h3", "", p.title),
-        textEl("p", "detail-meta", statusMeta(p)),
-        textEl("p", "detail-text", p.summary)
-      );
-      if (!isWip(p)) {
-        const links = document.createElement("div");
-        links.className = "detail-links";
-        links.append(...projectLinks(p));
-        item.append(links);
+    const items = PROJECTS.map((p) => {
+      // Finished projects link to their page; wip ones stay plain text.
+      const title = document.createElement("h3");
+      if (isWip(p)) title.textContent = p.title;
+      else {
+        const link = textEl("a", "", p.title);
+        link.href = pageUrl(p);
+        title.append(link);
       }
-      list.append(item);
+      const item = document.createElement("li");
+      item.append(title, textEl("p", "kicker", statusMeta(p)), textEl("p", "hero-text", p.summary));
+      return item;
     });
+    list.append(...items);
     section.append(textEl("p", "kicker", "Proyectos"), list);
+    if (returnIndex >= 0) items[returnIndex].scrollIntoView({ behavior: "instant", block: "start" });
   }
 
   if (!window.THREE) {
@@ -276,37 +255,21 @@
     return hits.length ? hits[0].object.userData.index : -1;
   }
 
-  const isOpen = () => !detail.hidden;
-  const canOpen = (i) => i >= 0 && !isWip(PROJECTS[i]) && hasLinks(PROJECTS[i]);
+  const canOpen = (i) => i >= 0 && !isWip(PROJECTS[i]);
 
-  // Single entry point for card click and Enter: open the panel or explain why not.
+  // Single entry point for card click and Enter: open the project page or explain why not.
   function activate(i) {
     const p = PROJECTS[i];
     if (isWip(p)) window.showToast("Proyecto en desarrollo. Todavía no se puede abrir.");
-    else if (!hasLinks(p)) window.showToast("Este proyecto todavía no tiene web publicada.");
-    else openDetail(i);
+    else window.location.href = pageUrl(p);
   }
 
-  function openDetail(i) {
-    const p = PROJECTS[i];
-    dMeta.textContent = metaText(p);
-    dTitle.textContent = p.title;
-    dText.textContent = p.description || p.summary;
-    dStack.replaceChildren(
-      ...(p.stack || []).map((s) => {
-        const li = document.createElement("li");
-        li.textContent = s;
-        return li;
-      })
-    );
-    dLinks.replaceChildren(...projectLinks(p));
-    detail.hidden = false;
-    stage.classList.add("detail-open");
-  }
-
-  function closeDetail() {
-    detail.hidden = true;
-    stage.classList.remove("detail-open");
+  // Jump (no smooth scroll) to the scroll position where the returning card is the active one.
+  function scrollToReturnCard() {
+    const top = section.getBoundingClientRect().top + window.scrollY;
+    const progress = n > 1 ? returnIndex / (n - 1) : 0;
+    window.scrollTo({ top: top + progress * (section.offsetHeight - innerHeight), behavior: "instant" });
+    entry = 1;
   }
 
   function animate() {
@@ -397,13 +360,11 @@
     canvas.addEventListener("click", (e) => {
       const i = pick(e);
       if (i >= 0) activate(i);
-      else closeDetail();
     });
-    document.getElementById("detail-close").addEventListener("click", closeDetail);
     window.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeDetail();
-      else if (e.key === "Enter" && !isOpen() && e.target === document.body) activate(currentIndex);
+      if (e.key === "Enter" && e.target === document.body) activate(currentIndex);
     });
+    if (returnIndex >= 0) scrollToReturnCard();
     sp = scrollTarget();
     animate();
   }
