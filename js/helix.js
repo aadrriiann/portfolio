@@ -28,14 +28,10 @@
     const list = document.createElement("ol");
     list.className = "projects-list";
     const items = PROJECTS.map((p) => {
-      // Finished projects link to their page; wip ones stay plain text.
       const title = document.createElement("h3");
-      if (isWip(p)) title.textContent = p.title;
-      else {
-        const link = textEl("a", "", p.title);
-        link.href = pageUrl(p);
-        title.append(link);
-      }
+      const link = textEl("a", "", p.title);
+      link.href = pageUrl(p);
+      title.append(link);
       const item = document.createElement("li");
       item.append(title, textEl("p", "kicker", statusMeta(p)), textEl("p", "hero-text", p.summary));
       return item;
@@ -255,14 +251,10 @@
     return hits.length ? hits[0].object.userData.index : -1;
   }
 
-  const canOpen = (i) => i >= 0 && !isWip(PROJECTS[i]);
-
-  // Single entry point for card click and Enter: open the project page or explain why not.
-  function activate(i) {
-    const p = PROJECTS[i];
-    if (isWip(p)) window.showToast("Proyecto en desarrollo. Todavía no se puede abrir.");
-    else window.location.href = pageUrl(p);
-  }
+  // Single entry point for card click and Enter: open the project page.
+  const activate = (i) => {
+    window.location.href = pageUrl(PROJECTS[i]);
+  };
 
   // Jump (no smooth scroll) to the scroll position where the returning card is the active one.
   function scrollToReturnCard() {
@@ -356,7 +348,7 @@
     });
 
     window.addEventListener("resize", onResize);
-    canvas.addEventListener("pointermove", (e) => canvas.classList.toggle("pointer", canOpen(pick(e))));
+    canvas.addEventListener("pointermove", (e) => canvas.classList.toggle("pointer", pick(e) >= 0));
     canvas.addEventListener("click", (e) => {
       const i = pick(e);
       if (i >= 0) activate(i);
