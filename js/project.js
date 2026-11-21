@@ -160,23 +160,26 @@
     return null;
   }
 
-  // Previous / next among the projects that have a page, cycling at both ends.
+  // Staircase URL that jumps straight back to this project's card.
+  const backUrl = (p) => "index.html#p=" + encodeURIComponent(p.slug);
+
+  // Previous / back / next row; previous and next among the projects that have a page, cycling at both ends.
   function pager(p) {
     const pages = window.PROJECTS.filter((q) => !isWip(q));
-    if (pages.length < 2) return null;
-    const i = pages.indexOf(p);
-    const card = (label, q) => {
-      const a = document.createElement("a");
-      a.href = pageUrl(q);
-      a.append(textEl("span", "kicker", label), textEl("span", "project-pager-title", q.title));
-      return a;
-    };
-    const nav = document.createElement("nav");
-    nav.className = "project-pager";
+    const nav = textEl("nav", "project-pager", "");
     nav.setAttribute("aria-label", "Otros proyectos");
+    const home = linkEl("Volver a proyectos", backUrl(p), "project-pager-home");
+    if (pages.length < 2) {
+      nav.append(home);
+      return nav;
+    }
+    const i = pages.indexOf(p);
+    const prev = pages[(i - 1 + pages.length) % pages.length];
+    const next = pages[(i + 1) % pages.length];
     nav.append(
-      card("Anterior", pages[(i - 1 + pages.length) % pages.length]),
-      card("Siguiente", pages[(i + 1) % pages.length])
+      linkEl(`← ${prev.title}`, pageUrl(prev), "project-pager-prev"),
+      home,
+      linkEl(`${next.title} →`, pageUrl(next), "project-pager-next")
     );
     return nav;
   }
@@ -188,7 +191,7 @@
     document.title = `${p.title} — Adrián Vázquez`;
     root.append(
       ...[
-        pills("project-topbar", [linkEl("← Volver a proyectos", "index.html#p=" + encodeURIComponent(p.slug))]),
+        pills("project-topbar", [linkEl("← Volver a proyectos", backUrl(p))]),
         header(p),
         cover(p),
         overview && section("Resumen", "Qué es", textEl("p", "hero-text", overview)),
