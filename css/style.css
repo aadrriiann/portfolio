@@ -378,10 +378,10 @@ canvas {
 }
 
 /* ---------- Project page ---------- */
-.project,
-.project-contact {
+.project {
   width: min(1080px, calc(100% - 64px));
   margin-inline: auto;
+  padding-bottom: clamp(64px, 10vw, 120px);
 }
 
 .project-topbar {
@@ -573,35 +573,26 @@ canvas {
 
 .project-pager {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
   margin-top: clamp(80px, 12vw, 144px);
+  padding-top: 28px;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .project-pager a {
-  display: flex;
-  flex-direction: column;
-  padding: 28px;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 14px;
-  color: var(--fg);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--muted);
   text-decoration: none;
-  transition: border-color 0.2s ease;
+  transition: color 0.2s ease;
 }
-.project-pager a + a {
-  align-items: flex-end;
-  text-align: right;
-}
-.project-pager a:hover { border-color: rgba(255, 255, 255, 0.5); }
+.project-pager a:hover { color: #fff; }
 .project-pager a:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 
-.project-pager-title {
-  font-family: Syne, Inter, sans-serif;
-  font-size: clamp(22px, 2.6vw, 32px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-}
+.project-pager-home { grid-column: 2; }
+.project-pager-next { text-align: right; }
 
 .project-missing {
   min-height: 70vh;
@@ -610,27 +601,27 @@ canvas {
   justify-content: center;
 }
 
-.project-contact.contact {
-  min-height: auto;
-  padding: clamp(96px, 14vw, 160px) 0;
-}
-
 @media (max-width: 720px) {
-  .project,
-  .project-contact {
+  .project {
     width: calc(100% - 36px);
   }
 
   .project-features,
   .project-tech,
-  .project-gallery,
-  .project-pager {
+  .project-gallery {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .project-pager a + a {
-    align-items: flex-start;
-    text-align: left;
+  /* Previous / next on one row, "Volver a proyectos" centred below */
+  .project-pager {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    row-gap: 20px;
+  }
+
+  .project-pager-home {
+    order: 3;
+    grid-column: 1 / -1;
+    text-align: center;
   }
 
   .lightbox {
