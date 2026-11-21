@@ -3,7 +3,7 @@
 ## 1. Product
 - Personal portfolio of Adrián Vázquez (DAM student, Salesianos). Static site, UI copy in Spanish.
 - Three pages: `index.html` (hero, 3D project "staircase", contact call-to-action), `project.html?p=<slug>` (project case study) and `contact.html` (contact form).
-- Projects are cards on a 3D spiral staircase (three.js). Scrolling down descends the stairs (card 01 at the top); click a finished card (or Enter) opens its page in the same tab; a wip card shows a toast.
+- Projects are cards on a 3D spiral staircase (three.js). Scrolling down descends the stairs (card 01 at the top); click any card (or Enter) opens its page in the same tab; wip cards and pages carry an "En desarrollo" label (outlined `.project-status` pill above the kicker on the page).
 - The project page's "Volver a proyectos" links to `index.html#p=<slug>`, which jumps the staircase straight to that card.
 - Users: recruiters and people who want to contact him (inferred from the copy: "abierto a prácticas, colaboraciones").
 
@@ -28,7 +28,7 @@
 - `css/style.css` - all styles for both pages.
 - `js/projects.js` - project data (slug, title, course, tag, summary, description, stack, links, image, hue, details) and shared helpers.
 - `js/helix.js` - three.js scene: stairs, cards, dither shader, scroll pose, HUD, card click to the project page, `#p=<slug>` return; plain project list (titles link to the pages) if three.js fails to load.
-- `js/project.js` - reads `?p=<slug>` and renders the project page (header, cover, sections, `<dialog>` gallery lightbox, closing `.project-pager` row: previous · Volver a proyectos · next); "Proyecto no encontrado." for unknown or wip slugs.
+- `js/project.js` - reads `?p=<slug>` and renders the project page (header, cover, sections, `<dialog>` gallery lightbox, closing `.project-pager` row: previous · Volver a proyectos · next); "Proyecto no encontrado." for unknown slugs.
 - `js/main.js` - success toast (`?success=1`) and the cursor-trail canvas.
 - `assets/` - card images (`beavr-crm.png`, `rankgym.png`, `tull.jpg`) and the 1200x630 link-preview image `og-image.png`.
 
@@ -41,13 +41,13 @@
 ## 6. Code conventions
 - Reference file: `js/main.js` (small IIFE, `const` + arrow functions, 2-space indent, double quotes, semicolons).
 - CSS: class-based, `:root` custom properties, one section per area with a `/* ---------- ... ---------- */` banner, breakpoint at `max-width: 720px`.
-- Cache busting: `?v=N` per file in every page that loads it (e.g. `helix.js?v=13`); `index.html`, `project.html` and `contact.html` share the same numbers. Bump the number in every page that references the file after changing it.
+- Cache busting: `?v=N` per file in every page that loads it (e.g. `helix.js?v=14`); `index.html`, `project.html` and `contact.html` share the same numbers. Bump the number in every page that references the file after changing it.
 - To add a project: copy a block in `js/projects.js` and fill `slug, title, course, tag, summary, description, stack, links, image, hue`,
-  plus `status: "wip"` (in development: shows a toast, has no page) or `web` (published URL). Every finished project opens `project.html?p=<slug>`
+  plus `status: "wip"` (in development: "En desarrollo" label on the card and page) or `web` (published URL). Every project opens `project.html?p=<slug>`
   (its header shows "Ver web" when `web` exists, then `links`, e.g. `{ label: "Código", url }`).
   `image` is a 768x512 picture file in `assets/` (no base64). Without `image` the card and the page cover use a gradient from `hue`.
 - Optional `details` (every field optional) fills the project page: `overview` (fallback `description`), `role`, `features: [text]`,
-  `tech: [{ name, use }]` (fallback: `stack` as chips), `learned`, `gallery: [{ src, caption }]`. Sections without data are not rendered.
+  `tech: [{ name, use }]` (fallback: `stack` as chips), `next: [text]` ("Próximos pasos", after the features), `learned`, `gallery: [{ src, caption }]`. Sections without data are not rendered.
 - `prefers-reduced-motion`: no cursor trail; the helix keeps the scroll-driven pose but has no dither animation, entry scale-in or scroll smoothing.
 - Existing comments and UI text are in Spanish; new code and comments in English (global rule). UI text stays Spanish.
 
@@ -58,7 +58,7 @@
 - No shared component library; reuse existing classes (`.kicker`, `.hero-text`, `.contact-links a` pills with `.pill-primary` for the white-fill action, `.chip-list`).
 - Project HUD sits on the left, vertically centred (bottom on mobile); a soft gradient (`#helix-stage::before`) keeps it readable over the stairs.
 - Project page: centred 1080px column, sections as `.kicker` + Syne h2, 1px `rgba(255,255,255,.12)` borders on images, 2-column lists/gallery that collapse to 1 at 720px; no entrance animations.
-- The project page ends with a minimal hairline-topped text row ("← previous" · "Volver a proyectos" · "next →", non-wip projects, cycling; back link centred below on mobile) and no contact block: the contact call-to-action lives only on the home page.
+- The project page ends with a minimal hairline-topped text row ("← previous" · "Volver a proyectos" · "next →", all projects in array order, cycling; back link centred below on mobile) and no contact block: the contact call-to-action lives only on the home page.
 - No emoji. Keep new UI inside this palette.
 
 ## 8. Environment variables

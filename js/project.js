@@ -1,6 +1,6 @@
 (() => {
   const root = document.getElementById("project");
-  const { isWip, statusMeta, pageUrl } = window.projectHelpers;
+  const { isWip, metaText, pageUrl } = window.projectHelpers;
   const slug = new URLSearchParams(window.location.search).get("p");
   const project = window.PROJECTS.find((p) => p.slug === slug);
 
@@ -66,7 +66,8 @@
   function header(p) {
     const el = document.createElement("header");
     el.className = "project-header";
-    el.append(textEl("p", "kicker", statusMeta(p)), textEl("h1", "", p.title), textEl("p", "hero-text", p.summary));
+    if (isWip(p)) el.append(textEl("p", "project-status", "En desarrollo"));
+    el.append(textEl("p", "kicker", metaText(p)), textEl("h1", "", p.title), textEl("p", "hero-text", p.summary));
     const actions = [
       ...(p.web ? [externalLink("Ver web", p.web, "pill-primary")] : []),
       ...(p.links || []).map((l) => externalLink(l.label, l.url)),
@@ -163,9 +164,9 @@
   // Staircase URL that jumps straight back to this project's card.
   const backUrl = (p) => "index.html#p=" + encodeURIComponent(p.slug);
 
-  // Previous / back / next row; previous and next among the projects that have a page, cycling at both ends.
+  // Previous / back / next row over every project in array order, cycling at both ends.
   function pager(p) {
-    const pages = window.PROJECTS.filter((q) => !isWip(q));
+    const pages = window.PROJECTS;
     const nav = textEl("nav", "project-pager", "");
     nav.setAttribute("aria-label", "Otros proyectos");
     const home = linkEl("Volver a proyectos", backUrl(p), "project-pager-home");
@@ -198,6 +199,8 @@
         d.role && section("Mi parte", "Qué hice yo", textEl("p", "hero-text", d.role)),
         d.features && d.features.length &&
           section("Producto", "Funcionalidades", list("ul", "project-features", d.features, (f) => textEl("li", "", f))),
+        d.next && d.next.length &&
+          section("Estado", "Próximos pasos", list("ul", "project-features", d.next, (t) => textEl("li", "", t))),
         d.gallery && d.gallery.length && section("Capturas", "Galería", gallery(d.gallery)),
         techList && section("Stack", "Tecnologías", techList),
         d.learned && section("Balance", "Lo que aprendí", textEl("p", "hero-text", d.learned)),
@@ -206,7 +209,6 @@
     );
   }
 
-  // Work-in-progress projects have no page yet.
-  if (!project || isWip(project)) renderMissing();
+  if (!project) renderMissing();
   else render(project);
 })();

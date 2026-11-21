@@ -393,6 +393,12 @@ canvas {
   padding-top: clamp(56px, 10vw, 120px);
 }
 
+/* Outlined "En desarrollo" pill above the kicker; shares the chip look */
+.project-status {
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
 .project-cover {
   display: block;
   width: 100%;
@@ -466,7 +472,8 @@ canvas {
   flex-wrap: wrap;
   gap: 8px;
 }
-.chip-list li {
+.chip-list li,
+.project-status {
   font-size: 13px;
   padding: 6px 14px;
   border: 1px solid rgba(255, 255, 255, 0.2);
