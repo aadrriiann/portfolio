@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prototipos del final de proyecto — Adrián Vázquez</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../css/style.css?v=12" />
+    <style>
+      .proto-list { list-style: none; margin-top: 48px; }
+      .proto-list li {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        padding: 20px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.12);
+      }
+      .proto-list .contact-links { margin-top: 0; flex: 0 0 220px; }
+      .proto-list p { color: var(--muted); line-height: 1.5; }
+      @media (max-width: 720px) {
+        .proto-list li { flex-direction: column; align-items: flex-start; gap: 12px; }
+        .proto-list .contact-links { flex-basis: auto; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="project">
+      <header class="project-header">
+        <p class="kicker">Prototipos</p>
+        <h1>Final de la página de proyecto</h1>
+        <p class="hero-text">Cuatro propuestas para el paginador y el contacto. Todas se alinean con la columna de 1080px del resto de la página.</p>
+      </header>
+      <ul class="proto-list">
+        <li><div class="contact-links"><a href="footer-a.html">A · Siguiente proyecto</a></div><p>El siguiente proyecto como protagonista con su portada de fondo; contacto en una fila compacta.</p></li>
+        <li><div class="contact-links"><a href="footer-b.html">B · Miniaturas</a></div><p>Anterior y siguiente con miniatura y separador fino; contacto en una tarjeta centrada.</p></li>
+        <li><div class="contact-links"><a href="footer-c.html">C · Mínima</a></div><p>Tres enlaces de texto en una línea y un banner blanco con «¿Hablamos?».</p></li>
+        <li><div class="contact-links"><a href="footer-d.html">D · Tarjeta final</a></div><p>Una sola tarjeta dividida: siguiente proyecto a la izquierda y contacto a la derecha.</p></li>
+        <li><div class="contact-links"><a href="../project.html?p=rankgym">Actual</a></div><p>La página tal como está ahora, para comparar.</p></li>
+      </ul>
+    </main>
+  </body>
+</html>

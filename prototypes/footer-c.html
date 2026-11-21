@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Prototype lives in prototypes/: resolve every relative path from the site root. -->
+    <base href="../" />
+    <script>
+      // Default to RankGym so prev = Beavr CRM and next = Tull Arquitectura.
+      if (!new URLSearchParams(location.search).get("p")) history.replaceState(null, "", location.pathname + "?p=rankgym");
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Prototipo footer c — Adrián Vázquez</title>
+    <meta name="description" content="Proyecto del portfolio de Adrián Vázquez, estudiante de DAM (Desarrollo de Aplicaciones Multiplataforma) en Salesianos." />
+    <!-- OG tags are static (generic portfolio values): there is no build step to generate one set per project. -->
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:title" content="Proyectos — Adrián Vázquez" />
+    <meta property="og:description" content="Estudiante de Desarrollo de Aplicaciones Multiplataforma. Proyectos en Flutter, Next.js, Java y más." />
+    <meta property="og:url" content="https://portfolio-psi-brown-11.vercel.app/project.html" />
+    <meta property="og:image" content="https://portfolio-psi-brown-11.vercel.app/assets/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Adrián Vázquez — Portfolio DAM" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://portfolio-psi-brown-11.vercel.app/assets/og-image.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css?v=12" />
+    <link rel="stylesheet" href="prototypes/footer-c.css" />
+  </head>
+  <body>
+    <canvas id="cursor-trail" aria-hidden="true"></canvas>
+
+    <main class="project" id="project"></main>
+
+    <section class="contact project-contact" id="contacto">
+      <p class="kicker">Contacto</p>
+      <h2>¿Hablamos?</h2>
+      <p class="contact-text">Estoy abierto a prácticas y colaboraciones. Cuéntame de qué va tu proyecto y te digo en qué te puedo ayudar.</p>
+      <div class="contact-links">
+        <a href="contact.html">Envíame un correo</a>
+      </div>
+    </section>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <script src="js/projects.js?v=13"></script>
+    <script src="js/project.js?v=1"></script>
+    <script src="js/main.js?v=10"></script>
+    <script src="prototypes/footer-c.js"></script>
+  </body>
+</html>
